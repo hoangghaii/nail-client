@@ -85,7 +85,7 @@ Modern, premium nail salon website for Pink. Nail in San Francisco. The site sho
 ## External Dependencies
 
 - **Unsplash API**: Placeholder images for services and gallery (`https://source.unsplash.com/`)
-- **localStorage**: Booking draft persistence (key: `muse-nail-booking-draft`)
+- **localStorage**: Booking draft persistence (key: `pink-nail-booking-draft`)
 
 ## Implementation Decisions
 

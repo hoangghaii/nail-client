@@ -136,7 +136,7 @@ The booking system MUST save progress and allow resuming incomplete bookings.
 
 **Given** user progresses through booking steps
 **When** user completes any step before confirmation
-**Then** booking data is saved to localStorage with key 'muse-nail-booking-draft'
+**Then** booking data is saved to localStorage with key 'pink-nail-booking-draft'
 **And** data includes: selectedService, selectedDate, selectedTimeSlot, customerInfo, currentStep
 
 #### Scenario: Resume booking prompt
@@ -151,7 +151,7 @@ The booking system MUST save progress and allow resuming incomplete bookings.
 
 **Given** user confirms booking successfully
 **When** confirmation completes
-**Then** 'muse-nail-booking-draft' is removed from localStorage
+**Then** 'pink-nail-booking-draft' is removed from localStorage
 **And** booking state is reset to initial values
 
 ---
@@ -205,7 +205,7 @@ All booking components MUST adhere to design system rules.
 
 **Given** booking page components
 **When** components are inspected
-**Then** no shadow-_ classes are used
+**Then** no shadow-_classes are used
 **And** no bg-gradient-_ classes are present
 **And** only transition-colors for animations
 **And** only 5-color palette is used

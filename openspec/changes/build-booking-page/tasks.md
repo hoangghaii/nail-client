@@ -103,7 +103,7 @@
 ## Phase 4: localStorage Integration
 
 - [ ] Implement draft detection on page load
-  - Check if 'muse-nail-booking-draft' exists in localStorage
+  - Check if 'pink-nail-booking-draft' exists in localStorage
   - If exists, show prompt: "You have an incomplete booking. Resume?"
   - If user clicks "Resume", load draft data
   - If user clicks "Start New", clear draft, start fresh
@@ -115,7 +115,7 @@
 - [ ] Clear localStorage on confirmation
   - After successful booking confirmation
   - Display success message
-  - Clear 'muse-nail-booking-draft' from localStorage
+  - Clear 'pink-nail-booking-draft' from localStorage
   - Reset useBooking state
 
 ## Phase 5: Design Verification
