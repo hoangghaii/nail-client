@@ -141,7 +141,7 @@ cat openspec/changes/build-homepage-components/tasks.md
 
 ## Project Instructions
 
-Muse Nail - Modern Nail Salon Website
+Pink. Nail - Modern Nail Salon Website
 
 ### Project Overview
 

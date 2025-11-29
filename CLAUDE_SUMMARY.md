@@ -1,4 +1,4 @@
-# Muse Nail - OpenSpec Proposals Summary
+# Pink. Nail - OpenSpec Proposals Summary
 
 ## ✅ Completed Foundation (Phases 1-2)
 

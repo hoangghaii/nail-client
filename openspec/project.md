@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Modern, premium nail salon website for Muse Nail in San Francisco. The site showcases services, portfolio work, enables appointment booking, and provides contact information. Design emphasizes clean minimalism inspired by Dribbble/Behance aesthetics.
+Modern, premium nail salon website for Pink. Nail in San Francisco. The site showcases services, portfolio work, enables appointment booking, and provides contact information. Design emphasizes clean minimalism inspired by Dribbble/Behance aesthetics.
 
 ## Tech Stack
 
