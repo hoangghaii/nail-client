@@ -1,5 +1,6 @@
 import { Home } from "lucide-react";
 import { motion } from "motion/react";
+import * as React from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import {
@@ -58,14 +59,14 @@ export function Breadcrumb() {
             const isFirst = index === 0;
 
             return (
-              <BreadcrumbItem key={breadcrumb.path}>
-                {isLast ? (
-                  <BreadcrumbPage className="flex items-center gap-1.5 font-sans text-sm font-medium">
-                    {isFirst && <Home className="size-4" />}
-                    {breadcrumb.label}
-                  </BreadcrumbPage>
-                ) : (
-                  <>
+              <React.Fragment key={breadcrumb.path}>
+                <BreadcrumbItem>
+                  {isLast ? (
+                    <BreadcrumbPage className="flex items-center gap-1.5 font-sans text-sm font-medium">
+                      {isFirst && <Home className="size-4" />}
+                      {breadcrumb.label}
+                    </BreadcrumbPage>
+                  ) : (
                     <BreadcrumbLink asChild>
                       <Link
                         to={breadcrumb.path}
@@ -75,10 +76,10 @@ export function Breadcrumb() {
                         {breadcrumb.label}
                       </Link>
                     </BreadcrumbLink>
-                    <BreadcrumbSeparator />
-                  </>
-                )}
-              </BreadcrumbItem>
+                  )}
+                </BreadcrumbItem>
+                {!isLast && <BreadcrumbSeparator />}
+              </React.Fragment>
             );
           })}
         </BreadcrumbList>
