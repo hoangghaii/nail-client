@@ -13,12 +13,13 @@ const buttonVariants = cva(
     },
     variants: {
       size: {
-        default: "h-12 px-6 py-3 text-base has-[>svg]:px-5",
-        icon: "size-12",
-        "icon-lg": "size-14",
-        "icon-sm": "size-10",
-        lg: "h-14 px-8 py-4 text-lg has-[>svg]:px-6",
-        sm: "h-10 px-4 py-2 text-sm has-[>svg]:px-3",
+        default:
+          "h-10 px-4 py-2 text-sm has-[>svg]:px-3 md:h-12 md:px-6 md:py-3 md:text-base md:has-[>svg]:px-5",
+        icon: "size-10 md:size-12",
+        "icon-lg": "size-12 md:size-14",
+        "icon-sm": "size-8 md:size-10",
+        lg: "h-12 px-6 py-3 text-base has-[>svg]:px-5 md:h-14 md:px-8 md:py-4 md:text-lg md:has-[>svg]:px-6",
+        sm: "h-8 px-3 py-1.5 text-xs has-[>svg]:px-2 md:h-10 md:px-4 md:py-2 md:text-sm md:has-[>svg]:px-3",
       },
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
