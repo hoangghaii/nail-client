@@ -14,21 +14,21 @@ export function Footer() {
           <div>
             <h3 className="font-serif text-2xl font-bold">Pink.</h3>
             <p className="mt-4 text-sm leading-relaxed opacity-90">
-              Premium nail care and artistry in San Francisco. Where beauty
-              meets craftsmanship.
+              Chăm sóc móng cao cấp và nghệ thuật tại San Francisco. Nơi vẻ đẹp
+              gặp gỡ tay nghề thủ công.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-sans text-lg font-semibold">Quick Links</h4>
+            <h4 className="font-sans text-lg font-semibold">Liên Kết Nhanh</h4>
             <ul className="mt-4 space-y-2">
               <li>
                 <Link
                   to="/services"
                   className="text-sm transition-opacity hover:opacity-80"
                 >
-                  Our Services
+                  Dịch Vụ Của Chúng Tôi
                 </Link>
               </li>
               <li>
@@ -36,7 +36,7 @@ export function Footer() {
                   to="/gallery"
                   className="text-sm transition-opacity hover:opacity-80"
                 >
-                  Gallery
+                  Thư Viện Ảnh
                 </Link>
               </li>
               <li>
@@ -44,7 +44,7 @@ export function Footer() {
                   to="/booking"
                   className="text-sm transition-opacity hover:opacity-80"
                 >
-                  Book Appointment
+                  Đặt Lịch Hẹn
                 </Link>
               </li>
               <li>
@@ -52,7 +52,7 @@ export function Footer() {
                   to="/contact"
                   className="text-sm transition-opacity hover:opacity-80"
                 >
-                  Contact Us
+                  Liên Hệ
                 </Link>
               </li>
             </ul>
@@ -60,7 +60,7 @@ export function Footer() {
 
           {/* Contact Info & Hours */}
           <div>
-            <h4 className="font-sans text-lg font-semibold">Contact</h4>
+            <h4 className="font-sans text-lg font-semibold">Liên Hệ</h4>
             <div className="mt-4 space-y-3">
               <div className="flex items-start gap-3">
                 <Phone className="mt-0.5 h-5 w-5" />
@@ -91,12 +91,12 @@ export function Footer() {
               </div>
             </div>
             <div className="mt-4">
-              <p className="text-sm font-medium">Hours</p>
+              <p className="text-sm font-medium">Giờ Mở Cửa</p>
               <p className="mt-1 text-sm opacity-90">
                 {businessHours.find((h) => !h.closed)?.open} -{" "}
                 {businessHours.find((h) => !h.closed)?.close}
               </p>
-              <p className="text-sm opacity-90">Mon - Sat</p>
+              <p className="text-sm opacity-90">Thứ 2 - Thứ 7</p>
             </div>
           </div>
         </div>
@@ -104,7 +104,7 @@ export function Footer() {
         {/* Copyright */}
         <div className="mt-8 border-t border-primary-foreground/20 pt-8">
           <p className="text-center text-sm opacity-80">
-            © {currentYear} Pink. All rights reserved.
+            © {currentYear} Pink. Bản quyền thuộc về chúng tôi.
           </p>
         </div>
       </div>

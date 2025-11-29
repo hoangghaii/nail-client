@@ -1,38 +1,27 @@
 import { motion } from "motion/react";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
-import { servicesData } from "@/data/services";
-import { ServiceCategory } from "@/types";
-
-const categories = [
-  { label: "All Services", value: "all" },
-  { label: "Manicure", value: ServiceCategory.MANICURE },
-  { label: "Pedicure", value: ServiceCategory.PEDICURE },
-  { label: "Nail Art", value: ServiceCategory.NAIL_ART },
-  { label: "Extensions", value: ServiceCategory.EXTENSIONS },
-  { label: "Spa", value: ServiceCategory.SPA },
-];
+import { useServicesPage } from "@/hooks/useServicesPage";
 
 export function ServicesPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-
-  const filteredServices =
-    selectedCategory === "all"
-      ? servicesData
-      : servicesData.filter((service) => service.category === selectedCategory);
+  const {
+    categories,
+    filteredServices,
+    selectedCategory,
+    setSelectedCategory,
+  } = useServicesPage();
 
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <Breadcrumb />
         <PageHeader
-          subtitle="Discover our range of premium nail care services designed to make you look and feel your best"
-          title="Our Services"
+          subtitle="Khám phá các dịch vụ chăm sóc móng cao cấp được thiết kế để bạn trông và cảm thấy tốt nhất"
+          title="Dịch Vụ Của Chúng Tôi"
         />
 
         {/* Category Filter */}
@@ -70,7 +59,7 @@ export function ServicesPage() {
             className="py-12 text-center"
           >
             <p className="font-sans text-lg text-muted-foreground">
-              No services found in this category.
+              Không tìm thấy dịch vụ nào trong danh mục này.
             </p>
           </motion.div>
         )}
@@ -88,15 +77,15 @@ export function ServicesPage() {
           className="mt-16 rounded-[32px] border-2 border-border bg-muted p-8 text-center sm:p-12"
         >
           <h2 className="mb-4 font-serif text-3xl font-semibold text-foreground md:text-4xl">
-            Ready to Get Started?
+            Sẵn Sàng Bắt Đầu?
           </h2>
           <p className="mx-auto mb-6 max-w-2xl font-sans text-base leading-relaxed text-muted-foreground lg:text-lg">
-            Book your appointment today and experience the difference of premium
-            nail care
+            Đặt lịch hẹn ngay hôm nay và trải nghiệm sự khác biệt của dịch vụ
+            chăm sóc móng cao cấp
           </p>
           <Link to="/booking">
             <Button className="rounded-[12px]" size="lg">
-              Book An Appointment
+              Đặt Lịch Hẹn
             </Button>
           </Link>
         </motion.div>

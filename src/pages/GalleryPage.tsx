@@ -1,64 +1,32 @@
 import { motion } from "motion/react";
-import { useState } from "react";
-
-import type { GalleryItem } from "@/types";
 
 import { GalleryCard } from "@/components/gallery/GalleryCard";
 import { ImageLightbox } from "@/components/gallery/ImageLightbox";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { galleryData, GalleryCategory } from "@/data/gallery";
-
-const categories = [
-  { label: "All", value: "all" },
-  { label: "Manicures", value: GalleryCategory.MANICURE },
-  { label: "Pedicures", value: GalleryCategory.PEDICURE },
-  { label: "Nail Art", value: GalleryCategory.NAIL_ART },
-  { label: "Extensions", value: GalleryCategory.EXTENSIONS },
-];
+import { useGalleryPage } from "@/hooks/useGalleryPage";
 
 export function GalleryPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const filteredGallery =
-    selectedCategory === "all"
-      ? galleryData
-      : galleryData.filter((item) => item.category === selectedCategory);
-
-  const handleImageClick = (item: GalleryItem, index: number) => {
-    setSelectedImage(item);
-    setCurrentIndex(index);
-    setLightboxOpen(true);
-  };
-
-  const handleNext = () => {
-    const nextIndex = (currentIndex + 1) % filteredGallery.length;
-    setCurrentIndex(nextIndex);
-    setSelectedImage(filteredGallery[nextIndex]);
-  };
-
-  const handlePrevious = () => {
-    const prevIndex =
-      (currentIndex - 1 + filteredGallery.length) % filteredGallery.length;
-    setCurrentIndex(prevIndex);
-    setSelectedImage(filteredGallery[prevIndex]);
-  };
-
-  const closeLightbox = () => {
-    setLightboxOpen(false);
-    setSelectedImage(null);
-  };
+  const {
+    categories,
+    closeLightbox,
+    filteredGallery,
+    handleImageClick,
+    handleNext,
+    handlePrevious,
+    lightboxOpen,
+    selectedCategory,
+    selectedImage,
+    setSelectedCategory,
+  } = useGalleryPage();
 
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <Breadcrumb />
         <PageHeader
-          subtitle="Explore our portfolio of stunning nail art and designs. Every nail tells a story."
-          title="Our Gallery"
+          subtitle="Khám phá bộ sưu tập nghệ thuật nail và thiết kế tuyệt đẹp. Mỗi bộ móng kể một câu chuyện."
+          title="Thư Viện Của Chúng Tôi"
         />
 
         {/* Category Filter */}
@@ -112,7 +80,7 @@ export function GalleryPage() {
             className="py-12 text-center"
           >
             <p className="font-sans text-lg text-muted-foreground">
-              No items found in this category.
+              Không tìm thấy mục nào trong danh mục này.
             </p>
           </motion.div>
         )}

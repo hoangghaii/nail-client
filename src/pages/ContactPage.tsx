@@ -4,15 +4,18 @@ import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
 import { contactInfo, businessHours } from "@/data/businessInfo";
+import { useContactPage } from "@/hooks/useContactPage";
 
 export function ContactPage() {
+  useContactPage();
+
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <Breadcrumb />
         <PageHeader
-          subtitle="Have questions or ready to book? We'd love to hear from you."
-          title="Get In Touch"
+          subtitle="Bạn có câu hỏi hoặc sẵn sàng đặt lịch? Chúng tôi rất muốn nghe từ bạn."
+          title="Liên Hệ Với Chúng Tôi"
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -21,7 +24,7 @@ export function ContactPage() {
             {/* Contact Details Card */}
             <div className="rounded-[24px] border border-border bg-card p-8">
               <h2 className="font-serif text-2xl font-semibold text-foreground mb-6">
-                Contact Information
+                Thông Tin Liên Hệ
               </h2>
 
               <div className="space-y-6">
@@ -32,7 +35,7 @@ export function ContactPage() {
                   </div>
                   <div>
                     <p className="font-sans text-sm font-medium text-muted-foreground mb-1">
-                      Phone
+                      Điện Thoại
                     </p>
                     <a
                       href={`tel:${contactInfo.phone}`}
@@ -68,7 +71,7 @@ export function ContactPage() {
                   </div>
                   <div>
                     <p className="font-sans text-sm font-medium text-muted-foreground mb-1">
-                      Address
+                      Địa Chỉ
                     </p>
                     <address className="font-sans text-base text-foreground not-italic">
                       {contactInfo.address.street}
@@ -86,7 +89,7 @@ export function ContactPage() {
                   </div>
                   <div>
                     <p className="font-sans text-sm font-medium text-muted-foreground mb-2">
-                      Business Hours
+                      Giờ Làm Việc
                     </p>
                     <div className="space-y-1">
                       {businessHours.map((schedule) => (
@@ -97,7 +100,7 @@ export function ContactPage() {
                           <span>{schedule.day}</span>
                           <span className="text-muted-foreground">
                             {schedule.closed
-                              ? "Closed"
+                              ? "Đóng Cửa"
                               : `${schedule.open} - ${schedule.close}`}
                           </span>
                         </div>
@@ -111,17 +114,17 @@ export function ContactPage() {
             {/* Quick Book CTA */}
             <div className="rounded-[24px] border border-border bg-primary p-8 text-primary-foreground">
               <h3 className="font-serif text-2xl font-semibold mb-3">
-                Ready to Book?
+                Sẵn Sàng Đặt Lịch?
               </h3>
               <p className="font-sans text-base opacity-90 mb-6">
-                Schedule your appointment online and get confirmed instantly.
+                Đặt lịch hẹn trực tuyến và nhận xác nhận ngay lập tức.
               </p>
               <Button
                 variant="outline"
                 size="lg"
                 className="w-full bg-primary-foreground text-primary hover:bg-primary-foreground/90 border-primary-foreground"
               >
-                Book An Appointment
+                Đặt Lịch Hẹn
               </Button>
             </div>
           </div>
@@ -129,7 +132,7 @@ export function ContactPage() {
           {/* Contact Form */}
           <div className="rounded-[24px] border border-border bg-card p-8">
             <h2 className="font-serif text-2xl font-semibold text-foreground mb-6">
-              Send Us A Message
+              Gửi Tin Nhắn Cho Chúng Tôi
             </h2>
 
             <form className="space-y-6">
@@ -139,14 +142,14 @@ export function ContactPage() {
                   htmlFor="name"
                   className="block font-sans text-sm font-medium text-foreground mb-2"
                 >
-                  Your Name
+                  Tên Của Bạn
                 </label>
                 <input
                   type="text"
                   id="name"
                   name="name"
                   className="w-full rounded-[12px] border border-input bg-background px-4 py-3 font-sans text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all"
-                  placeholder="Enter your name"
+                  placeholder="Nhập tên của bạn"
                 />
               </div>
 
@@ -156,14 +159,14 @@ export function ContactPage() {
                   htmlFor="email"
                   className="block font-sans text-sm font-medium text-foreground mb-2"
                 >
-                  Email Address
+                  Địa Chỉ Email
                 </label>
                 <input
                   type="email"
                   id="email"
                   name="email"
                   className="w-full rounded-[12px] border border-input bg-background px-4 py-3 font-sans text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all"
-                  placeholder="your@email.com"
+                  placeholder="email@example.com"
                 />
               </div>
 
@@ -173,14 +176,14 @@ export function ContactPage() {
                   htmlFor="phone"
                   className="block font-sans text-sm font-medium text-foreground mb-2"
                 >
-                  Phone Number
+                  Số Điện Thoại
                 </label>
                 <input
                   type="tel"
                   id="phone"
                   name="phone"
                   className="w-full rounded-[12px] border border-input bg-background px-4 py-3 font-sans text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all"
-                  placeholder="(555) 123-4567"
+                  placeholder="0123 456 789"
                 />
               </div>
 
@@ -190,20 +193,20 @@ export function ContactPage() {
                   htmlFor="message"
                   className="block font-sans text-sm font-medium text-foreground mb-2"
                 >
-                  Message
+                  Tin Nhắn
                 </label>
                 <textarea
                   id="message"
                   name="message"
                   rows={5}
                   className="w-full rounded-[12px] border border-input bg-background px-4 py-3 font-sans text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all resize-none"
-                  placeholder="How can we help you?"
+                  placeholder="Chúng tôi có thể giúp gì cho bạn?"
                 />
               </div>
 
               {/* Submit Button */}
               <Button type="submit" size="lg" className="w-full">
-                Send Message
+                Gửi Tin Nhắn
               </Button>
             </form>
           </div>

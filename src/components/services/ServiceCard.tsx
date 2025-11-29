@@ -12,11 +12,11 @@ interface ServiceCardProps {
 }
 
 const categoryLabels: Record<ServiceCategory, string> = {
-  extensions: "Extensions",
-  manicure: "Manicure",
-  "nail-art": "Nail Art",
-  pedicure: "Pedicure",
-  spa: "Spa Treatment",
+  extensions: "Nối Móng",
+  manicure: "Làm Móng Tay",
+  "nail-art": "Nghệ Thuật Nail",
+  pedicure: "Làm Móng Chân",
+  spa: "Liệu Trình Spa",
 };
 
 export function ServiceCard({ index, service }: ServiceCardProps) {
@@ -82,7 +82,7 @@ export function ServiceCard({ index, service }: ServiceCardProps) {
           <div className="flex items-center gap-2">
             <Clock className="size-4 text-secondary" />
             <span className="font-sans text-sm text-muted-foreground">
-              {service.duration} min
+              {service.duration} phút
             </span>
           </div>
         </div>
@@ -94,7 +94,7 @@ export function ServiceCard({ index, service }: ServiceCardProps) {
           size="default"
           variant="default"
         >
-          Book This Service
+          Đặt Dịch Vụ Này
         </Button>
       </div>
     </motion.div>

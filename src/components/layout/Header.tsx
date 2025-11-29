@@ -5,11 +5,11 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const navigation = [
-  { href: "/", name: "Home" },
-  { href: "/services", name: "Services" },
-  { href: "/gallery", name: "Gallery" },
-  { href: "/booking", name: "Booking" },
-  { href: "/contact", name: "Contact" },
+  { href: "/", name: "Trang Chủ" },
+  { href: "/services", name: "Dịch Vụ" },
+  { href: "/gallery", name: "Thư Viện" },
+  { href: "/booking", name: "Đặt Lịch" },
+  { href: "/contact", name: "Liên Hệ" },
 ];
 
 export function Header() {
@@ -50,7 +50,7 @@ export function Header() {
           {/* Desktop CTA */}
           <div className="hidden md:block">
             <Link to="/booking">
-              <Button size="sm">Book Now</Button>
+              <Button size="sm">Đặt Lịch</Button>
             </Link>
           </div>
 
@@ -93,7 +93,7 @@ export function Header() {
               className="block mt-2"
               onClick={() => setMobileMenuOpen(false)}
             >
-              <Button className="w-full">Book Appointment</Button>
+              <Button className="w-full">Đặt Lịch Hẹn</Button>
             </Link>
           </div>
         </div>

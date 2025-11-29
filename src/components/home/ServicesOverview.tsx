@@ -9,8 +9,8 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      delayChildren: 0.2,
-      staggerChildren: 0.15,
+      delayChildren: 0.1,
+      staggerChildren: 0.08,
     },
   },
 };
@@ -20,7 +20,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     transition: {
-      duration: 0.6,
+      duration: 0.3,
       ease: [0.22, 1, 0.36, 1],
     },
     y: 0,
@@ -38,14 +38,14 @@ export function ServicesOverview() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ margin: "-100px", once: true }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           className="mb-12 text-center md:mb-16"
         >
           <h2 className="font-serif text-4xl font-semibold text-foreground md:text-5xl">
             Dịch vụ Nổi bật
           </h2>
           <p className="mx-auto mt-4 max-w-2xl font-sans text-base leading-relaxed text-muted-foreground lg:text-lg">
-            Discover our range of premium nail care services
+            Khám phá các dịch vụ chăm sóc móng cao cấp của chúng tôi
           </p>
         </motion.div>
 
@@ -93,7 +93,7 @@ export function ServicesOverview() {
                       ${service.price}
                     </span>
                     <span className="font-sans text-sm text-muted-foreground">
-                      {service.duration} mins
+                      {service.duration} phút
                     </span>
                   </div>
 
@@ -103,7 +103,7 @@ export function ServicesOverview() {
                       className="w-full group-hover:bg-secondary group-hover:text-secondary-foreground transition-all"
                       size="default"
                     >
-                      Book Now
+                      Đặt Lịch Ngay
                     </Button>
                   </Link>
                 </div>
@@ -117,13 +117,13 @@ export function ServicesOverview() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.8, duration: 0.6 }}
+          transition={{ delay: 0.3, duration: 0.3 }}
           className="mt-12 text-center"
         >
           <Link to="/services">
             <Button variant="outline" size="lg" className="group">
               <span className="font-sans text-base font-semibold">
-                View All Services
+                Xem Tất Cả Dịch Vụ
               </span>
               <motion.span
                 className="ml-2 inline-block"

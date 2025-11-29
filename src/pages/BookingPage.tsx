@@ -1,128 +1,41 @@
-import {
-  Calendar,
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  FileText,
-  User,
-} from "lucide-react";
+import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-
-import type { CustomerInfo, GalleryItem, Service } from "@/types";
 
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
 import { servicesData } from "@/data/services";
-
-const steps = [
-  { icon: FileText, id: 1, title: "Select Service" },
-  { icon: Calendar, id: 2, title: "Choose Date & Time" },
-  { icon: User, id: 3, title: "Your Information" },
-];
+import { useBookingPage } from "@/hooks/useBookingPage";
+import { cn } from "@/lib/utils";
 
 export function BookingPage() {
-  const location = useLocation();
-  const [currentStep, setCurrentStep] = useState(1);
-  const [selectedService, setSelectedService] = useState<Service | null>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
-  const [selectedTime, setSelectedTime] = useState<string>("");
-  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
-    email: "",
-    firstName: "",
-    lastName: "",
-    phone: "",
-  });
-
-  // Get gallery item from navigation state
-  const galleryItem = (location.state as { galleryItem?: GalleryItem })
-    ?.galleryItem;
-
-  // Check if coming from gallery page with a pre-selected item
-  useEffect(() => {
-    const state = location.state as {
-      fromGallery?: boolean;
-      galleryItem?: GalleryItem;
-    } | null;
-
-    if (state?.fromGallery && state.galleryItem) {
-      // Find matching service by category
-      const matchingService = servicesData.find(
-        (service) => service.category === state.galleryItem?.category,
-      );
-
-      if (matchingService) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setSelectedService(matchingService);
-        // Automatically move to step 2 (date/time selection)
-        setCurrentStep(2);
-      }
-    }
-  }, [location.state]);
-
-  // Generate available time slots
-  const timeSlots = [
-    "09:00",
-    "09:30",
-    "10:00",
-    "10:30",
-    "11:00",
-    "11:30",
-    "12:00",
-    "12:30",
-    "13:00",
-    "13:30",
-    "14:00",
-    "14:30",
-    "15:00",
-    "15:30",
-    "16:00",
-    "16:30",
-    "17:00",
-    "17:30",
-  ];
-
-  const handleNext = () => {
-    if (currentStep < 3) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-  const handleSubmit = () => {
-    // In a real app, this would submit to an API
-    alert("Booking submitted! (This is a demo)");
-  };
-
-  const canProceed = () => {
-    if (currentStep === 1) return selectedService !== null;
-    if (currentStep === 2) return selectedDate && selectedTime;
-    if (currentStep === 3) {
-      return (
-        customerInfo.firstName &&
-        customerInfo.lastName &&
-        customerInfo.email &&
-        customerInfo.phone
-      );
-    }
-    return false;
-  };
+  const {
+    canProceed,
+    currentStep,
+    customerInfo,
+    galleryItem,
+    handleNext,
+    handlePrevious,
+    handleSubmit,
+    selectedDate,
+    selectedService,
+    selectedTime,
+    setCustomerInfo,
+    setSelectedDate,
+    setSelectedService,
+    setSelectedTime,
+    steps,
+    timeSlots,
+  } = useBookingPage();
 
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <Breadcrumb />
         <PageHeader
-          subtitle="Book your appointment in just a few simple steps"
-          title="Book An Appointment"
+          subtitle="Đặt lịch hẹn chỉ với vài bước đơn giản"
+          title="Đặt Lịch Hẹn"
         />
 
         {/* Progress Steps */}
@@ -134,7 +47,13 @@ export function BookingPage() {
               const isCurrent = currentStep === step.id;
 
               return (
-                <div key={step.id} className="flex flex-1 items-center">
+                <div
+                  key={step.id}
+                  className={cn(
+                    "flex items-center",
+                    step.id === 3 ? "" : "flex-1",
+                  )}
+                >
                   <div className="flex flex-col items-center">
                     {/* Step Circle */}
                     <motion.div
@@ -214,7 +133,7 @@ export function BookingPage() {
                 transition={{ damping: 30, stiffness: 300, type: "spring" }}
               >
                 <h3 className="mb-6 font-serif text-2xl font-semibold text-foreground">
-                  Choose Your Service
+                  Chọn Dịch Vụ Của Bạn
                 </h3>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   {servicesData.map((service) => (
@@ -238,7 +157,7 @@ export function BookingPage() {
                           ${service.price}
                         </span>
                         <span className="font-sans text-sm text-muted-foreground">
-                          {service.duration} min
+                          {service.duration} phút
                         </span>
                       </div>
                     </button>
@@ -257,7 +176,7 @@ export function BookingPage() {
                 transition={{ damping: 30, stiffness: 300, type: "spring" }}
               >
                 <h3 className="mb-6 font-serif text-2xl font-semibold text-foreground">
-                  Select Date & Time
+                  Chọn Ngày & Giờ
                 </h3>
 
                 {/* Selected Service Summary */}
@@ -276,7 +195,7 @@ export function BookingPage() {
                           </div>
                           <div className="flex-1">
                             <p className="mb-1 font-sans text-xs text-muted-foreground">
-                              Selected Design
+                              Thiết Kế Đã Chọn
                             </p>
                             <h4 className="mb-1 font-serif text-base font-semibold text-foreground">
                               {galleryItem.title}
@@ -294,7 +213,7 @@ export function BookingPage() {
                     {/* Service Summary */}
                     <div className="rounded-[12px] border border-border bg-background p-4">
                       <p className="mb-1 font-sans text-sm text-muted-foreground">
-                        Selected Service
+                        Dịch Vụ Đã Chọn
                       </p>
                       <p className="font-sans text-lg font-semibold text-foreground">
                         {selectedService.name} - ${selectedService.price}
@@ -306,19 +225,19 @@ export function BookingPage() {
                 {/* Date Picker */}
                 <div className="mb-6">
                   <label className="mb-2 block font-sans text-sm font-medium text-foreground">
-                    Select Date
+                    Chọn Ngày
                   </label>
                   <DatePicker
                     date={selectedDate}
                     onSelect={setSelectedDate}
-                    placeholder="Choose your appointment date"
+                    placeholder="Chọn ngày hẹn của bạn"
                   />
                 </div>
 
                 {/* Time Slots */}
                 <div>
                   <label className="mb-3 block font-sans text-sm font-medium text-foreground">
-                    Select Time
+                    Chọn Giờ
                   </label>
                   <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
                     {timeSlots.map((time) => (
@@ -349,14 +268,14 @@ export function BookingPage() {
                 transition={{ damping: 30, stiffness: 300, type: "spring" }}
               >
                 <h3 className="mb-6 font-serif text-2xl font-semibold text-foreground">
-                  Your Information
+                  Thông Tin Của Bạn
                 </h3>
 
                 <div className="space-y-4">
                   {/* First Name */}
                   <div>
                     <label className="mb-2 block font-sans text-sm font-medium text-foreground">
-                      First Name *
+                      Tên *
                     </label>
                     <input
                       type="text"
@@ -375,7 +294,7 @@ export function BookingPage() {
                   {/* Last Name */}
                   <div>
                     <label className="mb-2 block font-sans text-sm font-medium text-foreground">
-                      Last Name *
+                      Họ *
                     </label>
                     <input
                       type="text"
@@ -387,7 +306,7 @@ export function BookingPage() {
                         })
                       }
                       className="w-full rounded-[12px] border border-border bg-background px-4 py-3 font-sans text-foreground transition-colors duration-200 focus:border-primary focus:outline-none"
-                      placeholder="Doe"
+                      placeholder="Nguyễn"
                     />
                   </div>
 
@@ -406,14 +325,14 @@ export function BookingPage() {
                         })
                       }
                       className="w-full rounded-[12px] border border-border bg-background px-4 py-3 font-sans text-foreground transition-colors duration-200 focus:border-primary focus:outline-none"
-                      placeholder="john.doe@example.com"
+                      placeholder="email@example.com"
                     />
                   </div>
 
                   {/* Phone */}
                   <div>
                     <label className="mb-2 block font-sans text-sm font-medium text-foreground">
-                      Phone Number *
+                      Số Điện Thoại *
                     </label>
                     <input
                       type="tel"
@@ -434,16 +353,16 @@ export function BookingPage() {
           </AnimatePresence>
 
           {/* Navigation Buttons */}
-          <div className="mt-8 flex items-center justify-between gap-4">
+          <div className="mt-8 flex items-center justify-between gap-2 sm:gap-4">
             <Button
               variant="outline"
               size="lg"
               onClick={handlePrevious}
               disabled={currentStep === 1}
-              className="rounded-[12px]"
+              className="rounded-[12px] flex-shrink-0"
             >
-              <ChevronLeft className="size-5" />
-              Previous
+              <ChevronLeft className="size-4 sm:size-5" />
+              <span className="hidden sm:inline">Quay Lại</span>
             </Button>
 
             {currentStep < 3 ? (
@@ -451,20 +370,20 @@ export function BookingPage() {
                 size="lg"
                 onClick={handleNext}
                 disabled={!canProceed()}
-                className="rounded-[12px]"
+                className="rounded-[12px] flex-1 sm:flex-initial"
               >
-                Next
-                <ChevronRight className="size-5" />
+                <span className="sm:inline">Tiếp Theo</span>
+                <ChevronRight className="size-4 sm:size-5" />
               </Button>
             ) : (
               <Button
                 size="lg"
                 onClick={handleSubmit}
                 disabled={!canProceed()}
-                className="rounded-[12px]"
+                className="rounded-[12px] flex-1 sm:flex-initial text-xs sm:text-base"
               >
-                <Check className="size-5" />
-                Confirm Booking
+                <Check className="size-4 sm:size-5" />
+                <span className="whitespace-nowrap">Xác Nhận Đặt Lịch</span>
               </Button>
             )}
           </div>
