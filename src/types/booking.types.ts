@@ -1,0 +1,41 @@
+export interface Booking {
+  customerInfo: CustomerInfo;
+  date: Date;
+  id?: string;
+  notes?: string;
+  serviceId: string;
+  status: BookingStatus;
+  timeSlot: TimeSlot;
+}
+
+export interface TimeSlot {
+  available: boolean;
+  time: string; // "09:00", "10:00", etc.
+}
+
+export interface CustomerInfo {
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+}
+
+export const BookingStatus = {
+  CANCELLED: "cancelled",
+  COMPLETED: "completed",
+  CONFIRMED: "confirmed",
+  PENDING: "pending",
+} as const;
+
+export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus];
+
+export interface BookingStep {
+  completed: boolean;
+  id: number;
+  title: string;
+}
+
+export interface AvailableSlots {
+  date: string; // ISO date
+  slots: TimeSlot[];
+}
