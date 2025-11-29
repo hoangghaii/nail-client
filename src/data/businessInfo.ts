@@ -17,7 +17,7 @@ export const contactInfo: ContactInfo = {
     street: "123 Beauty Lane",
     zip: "94102",
   },
-  email: "hello@musenail.com",
+  email: "hello@pinknail.com",
   phone: "(555) 123-4567",
 };
 
