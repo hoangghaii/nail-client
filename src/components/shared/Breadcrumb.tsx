@@ -12,10 +12,10 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-interface BreadcrumbData {
+type BreadcrumbData = {
   label: string;
   path: string;
-}
+};
 
 const routeLabels: Record<string, string> = {
   "": "Home",

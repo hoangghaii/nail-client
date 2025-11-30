@@ -1,8 +1,8 @@
 import { Loader2 } from "lucide-react";
 
-interface LoadingSpinnerProps {
+type LoadingSpinnerProps = {
   size?: "sm" | "md" | "lg";
-}
+};
 
 const sizeMap = {
   lg: "h-8 w-8",

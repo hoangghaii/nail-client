@@ -6,10 +6,10 @@ import type { Service, ServiceCategory } from "@/types";
 
 import { Button } from "@/components/ui/button";
 
-interface ServiceCardProps {
+type ServiceCardProps = {
   index: number;
   service: Service;
-}
+};
 
 const categoryLabels: Record<ServiceCategory, string> = {
   extensions: "Nối Móng",

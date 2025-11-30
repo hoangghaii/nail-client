@@ -7,7 +7,7 @@ import type { GalleryItem } from "@/types";
 
 import { Button } from "@/components/ui/button";
 
-interface ImageLightboxProps {
+type ImageLightboxProps = {
   hasNext?: boolean;
   hasPrevious?: boolean;
   isOpen: boolean;
@@ -15,7 +15,7 @@ interface ImageLightboxProps {
   onClose: () => void;
   onNext?: () => void;
   onPrevious?: () => void;
-}
+};
 
 export function ImageLightbox({
   hasNext = false,

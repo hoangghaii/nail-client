@@ -6,11 +6,11 @@ import type { GalleryItem } from "@/types";
 
 import { Button } from "@/components/ui/button";
 
-interface GalleryCardProps {
+type GalleryCardProps = {
   index: number;
   item: GalleryItem;
   onImageClick?: () => void;
-}
+};
 
 export function GalleryCard({ index, item, onImageClick }: GalleryCardProps) {
   const navigate = useNavigate();
