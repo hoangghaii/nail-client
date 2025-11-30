@@ -1,10 +1,17 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Calendar, FileText, User } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useLocation } from "react-router-dom";
 
-import type { CustomerInfo, GalleryItem, Service } from "@/types";
+import type { GalleryItem, Service } from "@/types";
 
 import { servicesData } from "@/data/services";
+import { toast } from "@/lib/toast";
+import {
+  type BookingFormData,
+  bookingFormSchema,
+} from "@/lib/validations/booking.validation";
 
 const steps = [
   { icon: FileText, id: 1, title: "Chọn Dịch Vụ" },
@@ -35,89 +42,146 @@ const timeSlots = [
 
 export function useBookingPage() {
   const location = useLocation();
-  const [currentStep, setCurrentStep] = useState(1);
-  const [selectedService, setSelectedService] = useState<Service | null>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
-  const [selectedTime, setSelectedTime] = useState<string>("");
-  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
-    email: "",
-    firstName: "",
-    lastName: "",
-    phone: "",
-  });
 
   // Get gallery item from navigation state
   const galleryItem = (location.state as { galleryItem?: GalleryItem })
     ?.galleryItem;
 
-  // Check if coming from gallery page with a pre-selected item
-  useEffect(() => {
-    const state = location.state as {
-      fromGallery?: boolean;
-      galleryItem?: GalleryItem;
-    } | null;
+  // Initialize service from gallery state - compute initial values
+  const state = location.state as {
+    fromGallery?: boolean;
+    galleryItem?: GalleryItem;
+  } | null;
 
-    if (state?.fromGallery && state.galleryItem) {
-      // Find matching service by category
-      const matchingService = servicesData.find(
-        (service) => service.category === state.galleryItem?.category,
-      );
+  const matchingService =
+    state?.fromGallery && state.galleryItem
+      ? servicesData.find(
+          (service) => service.category === state.galleryItem?.category,
+        )
+      : null;
 
-      if (matchingService) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setSelectedService(matchingService);
-        // Automatically move to step 2 (date/time selection)
-        setCurrentStep(2);
-      }
-    }
-  }, [location.state]);
+  const initialServiceId = matchingService?.id ?? "";
+  const initialStep = state?.fromGallery && matchingService ? 2 : 1;
+
+  const [currentStep, setCurrentStep] = useState(initialStep);
+  const [selectedService, setSelectedService] = useState<Service | null>(
+    matchingService ?? null,
+  );
+
+  // Initialize React Hook Form with Zod validation
+  const form = useForm<BookingFormData>({
+    defaultValues: {
+      customerInfo: {
+        email: "",
+        firstName: "",
+        lastName: "",
+        phone: "",
+      },
+      date: undefined,
+      serviceId: initialServiceId,
+      timeSlot: "",
+    },
+    mode: "onChange",
+    resolver: zodResolver(bookingFormSchema),
+  });
 
   const handleNext = () => {
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
+      // Scroll to top smoothly when moving to next step
+      window.scrollTo({ behavior: "smooth", top: 0 });
     }
   };
 
   const handlePrevious = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
+      // Scroll to top smoothly when moving to previous step
+      window.scrollTo({ behavior: "smooth", top: 0 });
     }
   };
 
-  const handleSubmit = () => {
-    // In a real app, this would submit to an API
-    alert("Booking submitted! (This is a demo)");
-  };
+  const onSubmit = form.handleSubmit((data) => {
+    try {
+      // In a real app, this would submit to an API
+      console.log("Booking data:", data);
+
+      // Generate unique ID and save to localStorage as a demo
+      const bookingId = crypto.randomUUID();
+      const booking = {
+        ...data,
+        id: bookingId,
+        status: "pending",
+      };
+      localStorage.setItem("lastBooking", JSON.stringify(booking));
+
+      // Show success toast
+      toast.success(
+        "Đặt lịch thành công!",
+        `Dịch vụ: ${selectedService?.name} | Ngày: ${data.date.toLocaleDateString("vi-VN")} | Giờ: ${data.timeSlot}`,
+      );
+
+      // Reset form
+      form.reset();
+      setSelectedService(null);
+      setCurrentStep(1);
+    } catch (error) {
+      console.error("Lỗi khi đặt lịch:", error);
+      toast.error(
+        "Có lỗi xảy ra",
+        "Vui lòng thử lại hoặc liên hệ với chúng tôi.",
+      );
+    }
+  });
 
   const canProceed = () => {
-    if (currentStep === 1) return selectedService !== null;
-    if (currentStep === 2) return selectedDate && selectedTime;
+    if (currentStep === 1) {
+      return selectedService !== null && form.getValues("serviceId") !== "";
+    }
+    if (currentStep === 2) {
+      const date = form.getValues("date");
+      const timeSlot = form.getValues("timeSlot");
+      return date instanceof Date && timeSlot !== "";
+    }
     if (currentStep === 3) {
+      const { customerInfo } = form.getValues();
       return (
-        customerInfo.firstName &&
-        customerInfo.lastName &&
-        customerInfo.email &&
-        customerInfo.phone
+        customerInfo.firstName !== "" &&
+        customerInfo.lastName !== "" &&
+        customerInfo.email !== "" &&
+        customerInfo.phone !== ""
       );
     }
     return false;
   };
 
+  const handleServiceSelect = (service: Service) => {
+    setSelectedService(service);
+    form.setValue("serviceId", service.id, { shouldValidate: true });
+  };
+
+  const handleDateSelect = (date: Date | undefined) => {
+    if (date) {
+      form.setValue("date", date, { shouldValidate: true });
+    }
+  };
+
+  const handleTimeSelect = (time: string) => {
+    form.setValue("timeSlot", time, { shouldValidate: true });
+  };
+
   return {
     canProceed,
     currentStep,
-    customerInfo,
+    form,
     galleryItem,
+    handleDateSelect,
     handleNext,
     handlePrevious,
-    handleSubmit,
-    selectedDate,
+    handleServiceSelect,
+    handleTimeSelect,
+    onSubmit,
     selectedService,
-    selectedTime,
-    setCustomerInfo,
-    setSelectedDate,
-    setSelectedService,
-    setSelectedTime,
     steps,
     timeSlots,
   };

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { Layout } from "@/components/layout/Layout";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
+import { Toaster } from "@/components/ui/sonner";
 import { BookingPage } from "@/pages/BookingPage";
 import { ContactPage } from "@/pages/ContactPage";
 import { GalleryPage } from "@/pages/GalleryPage";
@@ -21,6 +22,7 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
         </Route>
       </Routes>
+      <Toaster position="top-right" />
     </BrowserRouter>
   );
 }

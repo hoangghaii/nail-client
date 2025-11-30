@@ -5,6 +5,15 @@ import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { servicesData } from "@/data/services";
 import { useBookingPage } from "@/hooks/useBookingPage";
 import { cn } from "@/lib/utils";
@@ -13,21 +22,21 @@ export function BookingPage() {
   const {
     canProceed,
     currentStep,
-    customerInfo,
+    form,
     galleryItem,
+    handleDateSelect,
     handleNext,
     handlePrevious,
-    handleSubmit,
-    selectedDate,
+    handleServiceSelect,
+    handleTimeSelect,
+    onSubmit,
     selectedService,
-    selectedTime,
-    setCustomerInfo,
-    setSelectedDate,
-    setSelectedService,
-    setSelectedTime,
     steps,
     timeSlots,
   } = useBookingPage();
+
+  const selectedDate = form.watch("date");
+  const selectedTime = form.watch("timeSlot");
 
   return (
     <div className="min-h-screen bg-background">
@@ -139,7 +148,7 @@ export function BookingPage() {
                   {servicesData.map((service) => (
                     <button
                       key={service.id}
-                      onClick={() => setSelectedService(service)}
+                      onClick={() => handleServiceSelect(service)}
                       className={`rounded-[16px] border-2 p-4 text-left transition-all duration-200 ${
                         selectedService?.id === service.id
                           ? "border-primary bg-primary/5"
@@ -223,38 +232,61 @@ export function BookingPage() {
                 )}
 
                 {/* Date Picker */}
-                <div className="mb-6">
-                  <label className="mb-2 block font-sans text-sm font-medium text-foreground">
-                    Chọn Ngày
-                  </label>
-                  <DatePicker
-                    date={selectedDate}
-                    onSelect={setSelectedDate}
-                    placeholder="Chọn ngày hẹn của bạn"
+                <Form {...form}>
+                  <FormField
+                    control={form.control}
+                    name="date"
+                    render={() => (
+                      <FormItem className="mb-6">
+                        <FormLabel className="font-sans text-sm font-medium text-foreground">
+                          Chọn Ngày
+                        </FormLabel>
+                        <FormControl>
+                          <DatePicker
+                            date={selectedDate}
+                            onSelect={handleDateSelect}
+                            placeholder="Chọn ngày hẹn của bạn"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
+                </Form>
 
                 {/* Time Slots */}
-                <div>
-                  <label className="mb-3 block font-sans text-sm font-medium text-foreground">
-                    Chọn Giờ
-                  </label>
-                  <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
-                    {timeSlots.map((time) => (
-                      <button
-                        key={time}
-                        onClick={() => setSelectedTime(time)}
-                        className={`rounded-[8px] border px-3 py-2 font-sans text-sm font-medium transition-all duration-200 ${
-                          selectedTime === time
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : "border-border bg-background text-foreground hover:border-secondary"
-                        }`}
-                      >
-                        {time}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <Form {...form}>
+                  <FormField
+                    control={form.control}
+                    name="timeSlot"
+                    render={() => (
+                      <FormItem>
+                        <FormLabel className="font-sans text-sm font-medium text-foreground">
+                          Chọn Giờ
+                        </FormLabel>
+                        <FormControl>
+                          <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
+                            {timeSlots.map((time) => (
+                              <button
+                                key={time}
+                                type="button"
+                                onClick={() => handleTimeSelect(time)}
+                                className={`rounded-[8px] border px-3 py-2 font-sans text-sm font-medium transition-all duration-200 ${
+                                  selectedTime === time
+                                    ? "border-primary bg-primary text-primary-foreground"
+                                    : "border-border bg-background text-foreground hover:border-secondary"
+                                }`}
+                              >
+                                {time}
+                              </button>
+                            ))}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </Form>
               </motion.div>
             )}
 
@@ -271,83 +303,85 @@ export function BookingPage() {
                   Thông Tin Của Bạn
                 </h3>
 
-                <div className="space-y-4">
-                  {/* First Name */}
-                  <div>
-                    <label className="mb-2 block font-sans text-sm font-medium text-foreground">
-                      Tên *
-                    </label>
-                    <input
-                      type="text"
-                      value={customerInfo.firstName}
-                      onChange={(e) =>
-                        setCustomerInfo({
-                          ...customerInfo,
-                          firstName: e.target.value,
-                        })
-                      }
-                      className="w-full rounded-[12px] border border-border bg-background px-4 py-3 font-sans text-foreground transition-colors duration-200 focus:border-primary focus:outline-none"
-                      placeholder="John"
+                <Form {...form}>
+                  <div className="space-y-4">
+                    {/* First Name */}
+                    <FormField
+                      control={form.control}
+                      name="customerInfo.firstName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-sans text-sm font-medium text-foreground">
+                            Tên *
+                          </FormLabel>
+                          <FormControl>
+                            <Input type="text" placeholder="John" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </div>
 
-                  {/* Last Name */}
-                  <div>
-                    <label className="mb-2 block font-sans text-sm font-medium text-foreground">
-                      Họ *
-                    </label>
-                    <input
-                      type="text"
-                      value={customerInfo.lastName}
-                      onChange={(e) =>
-                        setCustomerInfo({
-                          ...customerInfo,
-                          lastName: e.target.value,
-                        })
-                      }
-                      className="w-full rounded-[12px] border border-border bg-background px-4 py-3 font-sans text-foreground transition-colors duration-200 focus:border-primary focus:outline-none"
-                      placeholder="Nguyễn"
+                    {/* Last Name */}
+                    <FormField
+                      control={form.control}
+                      name="customerInfo.lastName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-sans text-sm font-medium text-foreground">
+                            Họ *
+                          </FormLabel>
+                          <FormControl>
+                            <Input type="text" placeholder="Doe" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </div>
 
-                  {/* Email */}
-                  <div>
-                    <label className="mb-2 block font-sans text-sm font-medium text-foreground">
-                      Email *
-                    </label>
-                    <input
-                      type="email"
-                      value={customerInfo.email}
-                      onChange={(e) =>
-                        setCustomerInfo({
-                          ...customerInfo,
-                          email: e.target.value,
-                        })
-                      }
-                      className="w-full rounded-[12px] border border-border bg-background px-4 py-3 font-sans text-foreground transition-colors duration-200 focus:border-primary focus:outline-none"
-                      placeholder="email@example.com"
+                    {/* Email */}
+                    <FormField
+                      control={form.control}
+                      name="customerInfo.email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-sans text-sm font-medium text-foreground">
+                            Email *
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type="email"
+                              placeholder="email@example.com"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </div>
 
-                  {/* Phone */}
-                  <div>
-                    <label className="mb-2 block font-sans text-sm font-medium text-foreground">
-                      Số Điện Thoại *
-                    </label>
-                    <input
-                      type="tel"
-                      value={customerInfo.phone}
-                      onChange={(e) =>
-                        setCustomerInfo({
-                          ...customerInfo,
-                          phone: e.target.value,
-                        })
-                      }
-                      className="w-full rounded-[12px] border border-border bg-background px-4 py-3 font-sans text-foreground transition-colors duration-200 focus:border-primary focus:outline-none"
-                      placeholder="(555) 123-4567"
+                    {/* Phone */}
+                    <FormField
+                      control={form.control}
+                      name="customerInfo.phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-sans text-sm font-medium text-foreground">
+                            Số Điện Thoại *
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type="tel"
+                              placeholder="0123456789"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
-                </div>
+                </Form>
               </motion.div>
             )}
           </AnimatePresence>
@@ -378,7 +412,7 @@ export function BookingPage() {
             ) : (
               <Button
                 size="lg"
-                onClick={handleSubmit}
+                onClick={onSubmit}
                 disabled={!canProceed()}
                 className="rounded-[12px] flex-1 sm:flex-initial text-xs sm:text-base"
               >
