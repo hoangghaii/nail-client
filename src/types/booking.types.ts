@@ -1,4 +1,4 @@
-export interface Booking {
+export type Booking = {
   customerInfo: CustomerInfo;
   date: Date;
   id?: string;
@@ -6,19 +6,19 @@ export interface Booking {
   serviceId: string;
   status: BookingStatus;
   timeSlot: TimeSlot;
-}
+};
 
-export interface TimeSlot {
+export type TimeSlot = {
   available: boolean;
   time: string; // "09:00", "10:00", etc.
-}
+};
 
-export interface CustomerInfo {
+export type CustomerInfo = {
   email: string;
   firstName: string;
   lastName: string;
   phone: string;
-}
+};
 
 export const BookingStatus = {
   CANCELLED: "cancelled",
@@ -29,13 +29,13 @@ export const BookingStatus = {
 
 export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus];
 
-export interface BookingStep {
+export type BookingStep = {
   completed: boolean;
   id: number;
   title: string;
-}
+};
 
-export interface AvailableSlots {
+export type AvailableSlots = {
   date: string; // ISO date
   slots: TimeSlot[];
-}
+};

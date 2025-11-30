@@ -1,4 +1,4 @@
-export interface GalleryItem {
+export type GalleryItem = {
   category: GalleryCategory;
   createdAt?: Date;
   description?: string;
@@ -8,7 +8,7 @@ export interface GalleryItem {
   imageUrl: string;
   price?: string; // e.g., "$45", "$60-80"
   title: string;
-}
+};
 
 export const GalleryCategory = {
   ALL: "all",
@@ -22,7 +22,7 @@ export const GalleryCategory = {
 export type GalleryCategory =
   (typeof GalleryCategory)[keyof typeof GalleryCategory];
 
-export interface GalleryFilterProps {
+export type GalleryFilterProps = {
   activeCategory: GalleryCategory;
   onCategoryChange: (category: GalleryCategory) => void;
-}
+};

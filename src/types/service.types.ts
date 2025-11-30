@@ -1,4 +1,4 @@
-export interface Service {
+export type Service = {
   category: ServiceCategory;
   description: string;
   duration: number; // in minutes
@@ -7,7 +7,7 @@ export interface Service {
   imageUrl?: string;
   name: string;
   price: number;
-}
+};
 
 export const ServiceCategory = {
   EXTENSIONS: "extensions",
@@ -20,7 +20,7 @@ export const ServiceCategory = {
 export type ServiceCategory =
   (typeof ServiceCategory)[keyof typeof ServiceCategory];
 
-export interface ServiceCardProps {
+export type ServiceCardProps = {
   service: Service;
   variant?: "default" | "featured" | "compact";
-}
+};

@@ -1,15 +1,15 @@
-export * from "./service.types";
 export * from "./booking.types";
 export * from "./gallery.types";
+export * from "./service.types";
 
-export interface BusinessHours {
+export type BusinessHours = {
   close: string;
   closed?: boolean;
   day: string;
   open: string;
-}
+};
 
-export interface ContactInfo {
+export type ContactInfo = {
   address: {
     city: string;
     state: string;
@@ -18,4 +18,4 @@ export interface ContactInfo {
   };
   email: string;
   phone: string;
-}
+};
