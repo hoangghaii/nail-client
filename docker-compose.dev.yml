@@ -1,0 +1,44 @@
+services:
+  client:
+    build:
+      context: ./nail-client
+      target: development
+
+    restart: unless-stopped
+
+    ports:
+      - '5173:5173'
+
+    volumes:
+      - ./nail-client:/app
+      - /app/node_modules/
+
+    environment:
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: "true"
+
+    stdin_open: true
+
+    tty: true
+
+  admin:
+    build:
+      context: ./nail-admin
+      target: development
+
+    restart: unless-stopped
+
+    ports:
+      - '5174:5174'
+
+    volumes:
+      - ./nail-admin:/app
+      - /app/node_modules/
+
+    environment:
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: "true"
+
+    stdin_open: true
+
+    tty: true
