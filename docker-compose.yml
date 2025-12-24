@@ -17,7 +17,7 @@ services:
 
     container_name: nail-pure-admin
     hostname: nail-pure-admin-host
-  
+
     networks:
       - external
 

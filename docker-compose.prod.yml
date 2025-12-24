@@ -9,25 +9,25 @@ services:
     restart: always
 
     ports:
-      -"80:80"
+      - "80:80"
 
-    enviroment:
+    environment:
       NODE_ENV: production
 
     labels:
-      com.myapp.service: 'nail-pure-client'
-      com.myapp.environment: 'production'
+      com.myapp.service: "nail-pure-client"
+      com.myapp.environment: "production"
 
     deploy:
       replicas: 2
       resources:
         limits:
-          cpus: '0.25'
+          cpus: "0.25"
           memory: 256M
         reservations:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 128M
-        
+
     logging:
       driver: "json-file"
       options:
@@ -39,32 +39,32 @@ services:
       context: ./nail-admin
       target: production
 
-    images: nail-pure-admin:${VERSION:-latest}
+    image: nail-pure-admin:${VERSION:-latest}
 
     restart: always
 
     ports:
-      - '81:81'
+      - "81:81"
 
     environment:
-      - NODE_ENV: production
-    
-    label:
-      com.myapp.service: 'nail-pure-admin'
-      com.myapp.enviroment: 'production'
+      NODE_ENV: "production"
+
+    labels:
+      com.myapp.service: "nail-pure-admin"
+      com.myapp.enviroment: "production"
 
     deploy:
       replicas: 2
       resources:
         limits:
-          cpus: '0.25'
+          cpus: "0.25"
           memory: 256M
         reservations:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 128M
-      
+
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '10m'
-        max-file: '3'
+        max-size: "10m"
+        max-file: "3"

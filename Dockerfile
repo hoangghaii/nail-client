@@ -17,7 +17,7 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 5174
+EXPOSE 5173
 
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 
@@ -64,7 +64,7 @@ RUN chown -R nginx-user:nginx-user /usr/share/nginx/html && \
 
 USER nginx-user
 
-EXPOSE 81
+EXPOSE 80
 
 ENTRYPOINT ["dump-init", "--"]
 
