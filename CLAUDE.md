@@ -24,117 +24,43 @@ Keep this managed block so 'openspec update' can refresh the instructions.
 <!-- CLAUDE:START -->
 ## Claude Instructions
 
-You (Claude Code) are a Implementation Specialist
+This section provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-You are a senior full-stack developer with expertise in writing production-quality code. Your role is to transform detailed specifications and tasks into working, tested, and maintainable code that adheres to architectural guidelines and best practices.
+## Role & Responsibilities
 
-### Core Responsibilities
+Your role is to analyze user requirements, delegate tasks to appropriate sub-agents, and ensure cohesive delivery of features that meet specifications and architectural standards.
 
-#### 1. Code Implementation
+## Workflows
 
-- Write clean, readable, and maintainable code
-- Follow established architectural patterns
-- Implement features according to specifications
-- Handle edge cases and error scenarios
-- Always stick style rules in '@docs/styled/STYLE-RULES.md' when implement UI.
-- Always check common class utitlities to use it before style anything.
+- Primary workflow: `./.claude/workflows/primary-workflow.md`
+- Development rules: `./.claude/workflows/development-rules.md`
+- Orchestration protocols: `./.claude/workflows/orchestration-protocol.md`
+- Documentation management: `./.claude/workflows/documentation-management.md`
+- And other workflows: `./.claude/workflows/*`
 
-#### 2. Task Tracking
+**IMPORTANT:** Analyze the skills catalog and activate the skills that are needed for the task during the process.
+**IMPORTANT:** You must follow strictly the development rules in `./.claude/workflows/development-rules.md` file.
+**IMPORTANT:** Before you plan or proceed any implementation, always read the `./README.md` file first to get context.
+**IMPORTANT:** Sacrifice grammar for the sake of concision when writing reports.
+**IMPORTANT:** In reports, list any unresolved questions at the end, if any.
+**IMPORTANT**: For `YYMMDD` dates, use `bash -c 'date +%y%m%d'` instead of model knowledge. Else, if using PowerShell (Windows), replace command with `Get-Date -UFormat "%y%m%d"`.
 
-**All tasks and implementation plans are tracked using OpenSpec.**
+## Documentation Management
 
-View active changes:
+We keep all important docs in `./docs` folder and keep updating them, structure like below:
 
-```bash
-openspec list
+```
+./docs
+├── project-overview-pdr.md
+├── code-standards.md
+├── codebase-summary.md
+├── design-guidelines.md
+├── deployment-guide.md
+├── system-architecture.md
+└── project-roadmap.md
 ```
 
-View proposal details:
-
-```bash
-openspec show build-homepage-components
-```
-
-View tasks for current change:
-
-```bash
-cat openspec/changes/build-homepage-components/tasks.md
-```
-
-#### 3. Testing
-
-- Write comprehensive unit tests
-- Ensure high code coverage
-- Test error scenarios
-- Validate performance requirements
-- After run tests, analyze the summary report.
-- If running failed tests, fix them follow the recommendations.
-
-#### 4. Code Quality
-
-- After finish implementation, review code.
-- Follow coding standards and conventions
-- Write self-documenting code
-- Add meaningful comments for complex logic
-- Optimize for performance and maintainability
-
-#### 5. Integration
-
-- Follow the plan given in `@openspec`
-- Ensure seamless integration with existing code
-- Maintain backward compatibility
-- Document breaking changes
-- Update docs in `./docs` directory if any.
-
-#### 6. Debugging
-
-- When a user report bugs or issues on the server or a CI/CD pipeline, run tests and analyze the summary report.
-- Read the summary report and implement the fix.
-- Run tests and analyze the summary report.
-- If running failed tests, fix them follow the recommendations.
-
-### Development Rules
-
-#### General
-
-- Whenever you want to understand the whole code base, use this command: [`repomix`](https://repomix.com/guide/usage) and read the output summary file.
-
-#### Code Quality Guidelines
-
-- Don't be too harsh on code linting
-- Prioritize functionality and readability over strict style enforcement and code formatting
-- Use reasonable code quality standards that enhance developer productivity
-- Use try catch error handling
-
-#### Pre-commit/Push Rules
-
-- Run linting before commit
-- Run tests before push (DO NOT ignore failed tests just to pass the build or github actions)
-- Keep commits focused on the actual code changes
-- **DO NOT** commit and push any confidential information (such as dotenv files, API keys, database credentials, etc.) to git repository!
-- NEVER automatically add AI attribution signatures like:
-  "🤖 Generated with [Claude Code]"
-  "Co-Authored-By: Claude <noreply@anthropic.com>"
-  Any AI tool attribution or signature
-- Create clean, professional commit messages without AI references. Use conventional commit format.
-
-#### YAGNI - KISS - DRY principles
-
-- Stick to the YAGNI - KISS - DRY principles when working
-- What is YAGNI - KISS - DRY principles:
-  - YAGNI - You Aren't Gonna Need It: Avoid over-design and keep things simple. Just focus only on what is important.
-  - KISS - Keep It Simple, Stupid: DO NOT over-engineer!, DONE is better than PERFECT.
-  - DRY - Don't Repeat Yourself.
-
-#### Task Completeness Verification
-
-- Verify all tasks in the task list of the given plan are completed
-- Check for any remaining TODO comments
-- Update the given plan file with task status and next steps
-
-### Test rule
-
-- **[IMPORTANT]** Do not just simulate the implementation or mocking them, always implement the real code.
+**IMPORTANT:** *MUST READ* and *MUST COMPLY* all *INSTRUCTIONS* in project `./CLAUDE.md`, especially *WORKFLOWS* section is *CRITICALLY IMPORTANT*, this rule is *MANDATORY. NON-NEGOTIABLE. NO EXCEPTIONS. MUST REMEMBER AT ALL TIMES!!!*
 <!-- CLAUDE:END -->
 
 ---
@@ -149,10 +75,10 @@ Premium nail salon website built with React 19, TypeScript, Tailwind CSS v4, and
 
 ### Core Design Principles
 
-* **Vibe:** Luxurious, cozy, feminine, clean, modern, and organic.
-* **The "No Shadow" Rule:** Do NOT use `box-shadow` or drop shadows on any element. Depth must be achieved solely through the use of borders (strokes) and distinct background layers.
-* **Softness over Rigidity:** Avoid sharp 90-degree corners and rigid rectangular blocks. Use moderate border radii and organic shapes for backgrounds to create softness.
-* **Color Usage:** Solid colors only. Do not use color gradients.
+- **Vibe:** Luxurious, cozy, feminine, clean, modern, and organic.
+- **The "No Shadow" Rule:** Do NOT use `box-shadow` or drop shadows on any element. Depth must be achieved solely through the use of borders (strokes) and distinct background layers.
+- **Softness over Rigidity:** Avoid sharp 90-degree corners and rigid rectangular blocks. Use moderate border radii and organic shapes for backgrounds to create softness.
+- **Color Usage:** Solid colors only. Do not use color gradients.
 
 ### Tech Stack
 
@@ -213,5 +139,3 @@ npm run prettier:fix # Format code
 - ✅ Animate opacity, scale, and position for entrance effects
 - ❌ Avoid excessive motion that distracts from content
 - ❌ Avoid animations that conflict with the "no shadow" design principle
-
-
