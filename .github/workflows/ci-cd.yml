@@ -1,82 +1,60 @@
-name: CI/CD Pipeline
+# ============================================================================
+# Frontend QA Workflow
+# ============================================================================
+# Triggers: Automatic on push to main
+# Strategy: Fast deployment with minimal checks for quick feedback
+# Target: Azure Web App
+# ============================================================================
+
+name: Fronend QA Deployment
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
     branches: [main]
 
 env:
   NODE_VERSION: "24"
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{github.repository}}
-  AZURE_WEBAPP_NAME: your-app-name # set this to the name of your Azure Web App
+  IMAGE_NAME: ${{ github.repository }}
+  AZURE_WEBAPP_NAME: your-app-name
 
 jobs:
   # ============================================================================
-  # JOB 1: Code Quality & Testing
+  # Quick Smoke Test
   # ============================================================================
-  test:
-    name: Test & Quality Checks
+  smoke-test:
+    name: Quick Smoke Test
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout v4
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{env.NODE_VERSION}}
+          node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run ESLint
-        run: npm run lint:fix
-
-      - name: Run Prettier
-        run: npm run prettier:fix
-
-      - name: Run unit tests
-        run: npm run test
-
-      - name: Run test coverage
-        run: npm run test:coverage
-
-  # ============================================================================
-  # JOB 2: Build Application
-  # ============================================================================
-  build:
-    name: Build Application
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{env.NODE_VERSION}}
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build Application
+      - name: Build check
         run: npm run build
 
   # ============================================================================
-  # JOB 3: Build Docker Image
+  # Build and Push Docker Image
   # ============================================================================
   docker:
     name: Build Docker Image
-    runs-on: ubunu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: smoke-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tags }}
 
     permissions:
       contents: read
@@ -92,7 +70,7 @@ jobs:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -102,42 +80,50 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
-            type=sha,prefix={{branch}}-
-            type=semver,pattern={{version}}
+            type=raw,event=qa-latest
+            type=sha,prefix=qa-
+          flavor: latest=false
 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
+          target: production
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha # Use GitHub Actions cache
+          cache-from: type=gha
           cache-to: type=gha,mode=max
 
   # ============================================================================
-  # JOB 4: Deploy to Production
+  # Deploy to QA Environment
   # ============================================================================
-  deploy:
-    name: Deploy to Production
+  deploy-qa:
+    name: Deploy to QA
     runs-on: ubuntu-latest
     needs: docker
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     permissions:
       contents: none
 
-    # Environment Protection
-    enviroment:
-      name: "Production"
-      url: https://myapp.com
+    environment:
+      name: QA
+      url: https://myapp-qa.azurewebsites.net
 
     steps:
       - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        use: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          images: "ghcr.io/${{ env.REPO }}:${{ github.sha }}"
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_QA }}
+          images: ${{ needs.docker.outputs.image-tag }}
+
+      - name: Deployment Summary
+        run: |
+          echo "### QA Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** QA" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** https://myapp-qa.azurewebsites.net" >> $GITHUB_STEP_SUMMARY
+          echo "**Image:** ${{ needs.docker.outputs.image-tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
