@@ -1,0 +1,26 @@
+services:
+  client:
+    build:
+      context: ./nail-client
+      dockerfile: Dockerfile
+
+    container_name: nail-pure-client
+    hostname: nail-pure-client-host
+
+    networks:
+      - external
+
+  admin:
+    build:
+      context: ./nail-admin
+      dockerfile: Dockerfile
+
+    container_name: nail-pure-admin
+    hostname: nail-pure-admin-host
+  
+    networks:
+      - external
+
+networks:
+  external:
+    driver: bridge
