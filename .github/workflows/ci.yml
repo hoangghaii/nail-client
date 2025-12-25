@@ -1,35 +1,42 @@
-name: "CI: Run test"                  # Workflow name (cshow in GitHub UI)
+# name: "CI: Run test" # Workflow name (show in GitHub UI)
 
-# Multiple events
-# on: [push, pull_request]              # When to run  
+# # Multiple events
+# # on: [push, pull_request]              # When to run
 
-# Specific branches
-on:                                   # When to run
-  push:
-    branches:
-      - master
-      - main
-      - develop
-      - 'release/**'                  # Pattern: release/v1, release/v2
-    branches-ignore:
-      - 'temp/**'                     # Exclude branches
-  pull_request:
-    branches:
-      - master
-      - main
-      - develop
-      - 'release/**'
+# # Specific branches
+# on: # When to run
+#   push: # Use one of `branches` and `branches-ignore`
+#     branches:
+#       - master
+#       - main
+#       - develop
+#       - "release/**" # Pattern: release/v1, release/v2
+#     # branches-ignore:
+#     #   - "temp/**" # Exclude branches
+#   pull_request:
+#     branches:
+#       - master
+#       - main
+#       - develop
+#       - "release/**"
+#     # branches-ignore:
+#     #   - "temp/**"
 
-jobs:                                 # Jobs to run
-  test:                               # Job ID
-    runs-on: ubunu-latest             # OS to use (options: ubuntu-latest, windows-latest, macos-latest)
+# jobs: # Jobs to run
+#   test: # Job ID
+#     runs-on: ubunu-latest # OS to use (options: ubuntu-latest, windows-latest, macos-latest)
 
-    steps:                            # Steps to execute
-      - name: Checkout                # Step name
-        uses: actions/checkout@v4     # Use an action 
+#     steps: # Steps to execute
+#       - name: Checkout # Step name
+#         uses: actions/checkout@v5 # Use an action
 
-      - name: Install dependencies
-        run: npm install              # Run a command
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: "24"
 
-      - name: Run tests
-        run: npm run test
+#       - name: Install dependencies
+#         run: npm install # Run a command
+
+#       - name: Run tests
+#         run: npm run test
