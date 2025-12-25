@@ -31,6 +31,8 @@ WORKDIR /app
 
 COPY package*.json ./
 
+ENV CI=true
+
 RUN npm ci --only=production && \
   npm cache clean --force
 
