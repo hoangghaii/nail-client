@@ -46,7 +46,7 @@ RUN rm -rf src node_modules
 # ==========================================
 FROM nginx:alpine AS production
 
-RUN apk add --no-cache dump-init
+RUN apk add --no-cache dumb-init
 
 # Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
@@ -66,7 +66,7 @@ USER nginx-user
 
 EXPOSE 80
 
-ENTRYPOINT ["dump-init", "--"]
+ENTRYPOINT ["dumb-init", "--"]
 
 CMD ["nginx", "-g", "daemon off;"]
 
