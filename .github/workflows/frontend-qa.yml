@@ -80,7 +80,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,event=qa-latest
+            type=raw,value=qa-latest
             type=sha,prefix=qa-
           flavor: latest=false
 
