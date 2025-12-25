@@ -33,7 +33,7 @@ COPY package*.json ./
 
 ENV CI=true
 
-RUN npm ci --only=production && \
+RUN npm ci && \
   npm cache clean --force
 
 COPY . .
