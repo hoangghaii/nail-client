@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
@@ -25,7 +25,7 @@ const itemVariants = {
     },
     y: 0,
   },
-};
+} as Variants;
 
 export function ServicesOverview() {
   const featuredServices = getFeaturedServices();

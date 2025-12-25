@@ -1,5 +1,5 @@
 import { Clock, DollarSign } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import { Link } from "react-router-dom";
 
 import { ImageLightbox } from "@/components/gallery/ImageLightbox";
@@ -17,7 +17,7 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, scale: 0.9 },
   visible: {
     opacity: 1,
@@ -27,7 +27,7 @@ const itemVariants = {
       ease: [0.22, 1, 0.36, 1],
     },
   },
-};
+} as Variants;
 
 export function FeaturedGallery() {
   const {
