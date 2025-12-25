@@ -55,7 +55,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-RUN addgroup -g 1001 -S nginx-user & \
+RUN addgroup -g 1001 -S nginx-user && \
   adduser -S nginx-user -u 1001 -G nginx-user
 
 RUN chown -R nginx-user:nginx-user /usr/share/nginx/html && \
