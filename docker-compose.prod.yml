@@ -1,10 +1,25 @@
+# ==========================================
+# Production Environment Configuration
+# ==========================================
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# ==========================================
+
 services:
   client:
     build:
-      context: ./nail-client
+      context: .
+      dockerfile: Dockerfile
       target: production
+      # Enable BuildKit for faster builds
+      cache_from:
+        - nail-client:prod-cache
+      args:
+        - BUILDKIT_INLINE_CACHE=1
 
-    image: nail-pure-client:${VERSION:-latest}
+    image: nail-client:${VERSION:-latest}
+
+    container_name: nail-client-prod
+    hostname: nail-client-prod-host
 
     restart: always
 
@@ -12,59 +27,47 @@ services:
       - "80:80"
 
     environment:
-      NODE_ENV: production
+      - NODE_ENV=production
 
-    labels:
-      com.myapp.service: "nail-pure-client"
-      com.myapp.environment: "production"
-
+    # Resource limits to prevent container from consuming all resources
     deploy:
-      replicas: 2
+      replicas: 1
       resources:
         limits:
-          cpus: "0.25"
+          cpus: '0.50'
           memory: 256M
         reservations:
-          cpus: "0.1"
+          cpus: '0.25'
           memory: 128M
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 5s
+        window: 120s
 
+    # Logging configuration
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
+        compress: "true"
 
-  admin:
-    build:
-      context: ./nail-admin
-      target: production
+    networks:
+      - nail-network
 
-    image: nail-pure-admin:${VERSION:-latest}
-
-    restart: always
-
-    ports:
-      - "81:81"
-
-    environment:
-      NODE_ENV: "production"
+    # Health check already defined in base docker-compose.yml
+    # This ensures nginx is serving content properly
 
     labels:
-      com.myapp.service: "nail-pure-admin"
-      com.myapp.enviroment: "production"
+      com.nail.service: "client"
+      com.nail.environment: "production"
+      com.nail.description: "Pink Nail Salon Website - Production"
+      com.nail.version: "${VERSION:-latest}"
 
-    deploy:
-      replicas: 2
-      resources:
-        limits:
-          cpus: "0.25"
-          memory: 256M
-        reservations:
-          cpus: "0.1"
-          memory: 128M
-
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+networks:
+  nail-network:
+    driver: bridge
+    name: nail-network-prod
+    labels:
+      com.nail.network: "production"

@@ -1,60 +1,96 @@
 # ==========================================
-# BASE LAYER
+# BASE LAYER - Package Metadata
 # ==========================================
-FROM node:24.12.0 AS base
+FROM node:24.12.0-alpine AS base
+
+# Install dumb-init for proper signal handling
+RUN apk add --no-cache dumb-init
 
 WORKDIR /app
 
+# Copy only package files (for dependency layer caching)
 COPY package*.json ./
 
+# ==========================================
+# DEPENDENCIES LAYER - Shared Dependencies
+# ==========================================
+FROM base AS dependencies
+
+# Install ALL dependencies (including devDependencies)
+# --ignore-scripts prevents husky prepare script from running
+# BuildKit cache mount speeds up npm downloads across builds
+RUN --mount=type=cache,target=/root/.npm \
+  npm ci --ignore-scripts && \
+  npm cache clean --force
 
 # ==========================================
 # DEVELOPMENT LAYER
 # ==========================================
-FROM base AS development
+FROM dependencies AS development
 
-RUN npm install
-
+# Copy source code
 COPY . .
 
+# Expose Vite dev server port
 EXPOSE 5173
 
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+# Run as non-root user for security
+RUN addgroup -g 1001 -S nodejs && \
+  adduser -S viteuser -u 1001 -G nodejs && \
+  chown -R viteuser:nodejs /app
 
+USER viteuser
+
+# Use dumb-init to handle signals properly
+ENTRYPOINT ["dumb-init", "--"]
+
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 
 # ==========================================
 # BUILDER LAYER
 # ==========================================
-FROM node:24.12.0-alpine AS builder
+FROM dependencies AS builder
 
-WORKDIR /app
-
-COPY package*.json ./
-
+# Set CI mode for npm
 ENV CI=true
 
-RUN npm ci && \
-  npm cache clean --force
-
+# Copy source code
 COPY . .
 
-RUN npm run build
-
-RUN rm -rf src node_modules
+# Build the application
+# Set NODE_ENV=production for build optimization
+RUN NODE_ENV=production npm run build && \
+  npm prune --production && \
+  npm cache clean --force && \
+  rm -rf \
+  src \
+  node_modules \
+  .git \
+  .github \
+  tests \
+  *.md \
+  .prettierrc* \
+  .eslintrc* \
+  tsconfig.json \
+  vite.config.ts
 
 
 # ==========================================
-# PRODUCTION LAYER
+# PRODUCTION LAYER - Nginx Serving Static Files
 # ==========================================
-FROM nginx:alpine AS production
+FROM nginx:1.27-alpine AS production
 
+# Install dumb-init for proper signal handling
 RUN apk add --no-cache dumb-init
 
 # Copy custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
+# Copy built assets from builder stage
+# Only static files needed - no node_modules required for nginx
 COPY --from=builder /app/dist /usr/share/nginx/html
 
+# Create non-root user for security
 RUN addgroup -g 1001 -S nginx-user && \
   adduser -S nginx-user -u 1001 -G nginx-user
 
@@ -64,11 +100,14 @@ RUN chown -R nginx-user:nginx-user /usr/share/nginx/html && \
   touch /var/run/nginx.pid && \
   chown -R nginx-user:nginx-user /var/run/nginx.pid
 
+# Switch to non-root user
 USER nginx-user
 
+# Expose HTTP port
 EXPOSE 80
 
+# Use dumb-init as entrypoint for proper signal handling
 ENTRYPOINT ["dumb-init", "--"]
 
+# Start nginx in foreground
 CMD ["nginx", "-g", "daemon off;"]
-
