@@ -20,8 +20,7 @@ FROM base AS dependencies
 # --ignore-scripts prevents husky prepare script from running
 # BuildKit cache mount speeds up npm downloads across builds
 RUN --mount=type=cache,target=/root/.npm \
-  npm ci --ignore-scripts && \
-  npm cache clean --force
+  npm ci --ignore-scripts
 
 # ==========================================
 # DEVELOPMENT LAYER
@@ -64,14 +63,7 @@ RUN NODE_ENV=production npm run build && \
   npm cache clean --force && \
   rm -rf \
   src \
-  node_modules \
-  .git \
-  .github \
-  tests \
-  *.md \
-  .prettierrc* \
-  .eslintrc* \
-  tsconfig.json \
+  tsconfig*.json \
   vite.config.ts
 
 
@@ -83,8 +75,9 @@ FROM nginx:1.27-alpine AS production
 # Install dumb-init for proper signal handling
 RUN apk add --no-cache dumb-init
 
-# Copy custom nginx config
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copy nginx configuration files (as root, before switching user)
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Copy built assets from builder stage
 # Only static files needed - no node_modules required for nginx
@@ -94,9 +87,12 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 RUN addgroup -g 1001 -S nginx-user && \
   adduser -S nginx-user -u 1001 -G nginx-user
 
+# Set ownership and permissions for nginx directories and config files
 RUN chown -R nginx-user:nginx-user /usr/share/nginx/html && \
   chown -R nginx-user:nginx-user /var/cache/nginx && \
   chown -R nginx-user:nginx-user /var/log/nginx && \
+  chown -R nginx-user:nginx-user /etc/nginx/nginx.conf && \
+  chown -R nginx-user:nginx-user /etc/nginx/conf.d && \
   touch /var/run/nginx.pid && \
   chown -R nginx-user:nginx-user /var/run/nginx.pid
 
